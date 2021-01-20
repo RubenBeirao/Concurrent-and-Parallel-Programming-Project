@@ -1,0 +1,32 @@
+package cliente;
+
+public class Tarefa {
+
+	private String expressao;
+	private Noticia noticia;
+	private int handlerID;
+	private Barrier barrier;
+	
+	public Tarefa(String expressao, Noticia noticia, int handlerID) {
+		this.expressao = expressao;
+		this.noticia = noticia;
+		this.handlerID = handlerID;
+		this.barrier = barrier;
+	}
+	
+	public Noticia getNoticia() {
+		return noticia;
+	}
+	
+	public String getExpressao() {
+		return expressao;
+	}
+
+	public int getHandlerID() {
+		return handlerID;
+	}
+	
+	public Barrier getBarrier() {
+		return barrier;
+	}
+}

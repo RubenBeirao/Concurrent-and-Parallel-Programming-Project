@@ -1,0 +1,27 @@
+package cliente;
+
+import java.util.ArrayList;
+
+public class Worker extends Thread {
+
+	private Server s;
+
+	public Worker(Server s) {
+		this.s = s;
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				Tarefa t = s.getTasks().poll();
+				ArrayList<Integer> indices = t.getNoticia().procurar(t.getExpressao());
+				s.agregar(t.getHandlerID(), t.getNoticia(), indices);
+				t.getBarrier().barrierPost();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+}

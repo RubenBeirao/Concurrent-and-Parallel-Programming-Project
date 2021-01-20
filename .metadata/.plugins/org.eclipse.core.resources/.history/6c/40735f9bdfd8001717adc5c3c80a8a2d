@@ -1,0 +1,76 @@
+package cliente;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class ClientHandler extends Thread {
+
+	@SuppressWarnings("unused")
+	private Socket client;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	private Server server;
+	private int id;
+	private ArrayList<Resposta> respostas = new ArrayList<Resposta>();
+	private Barrier barrier;
+
+	public ClientHandler(Socket client, Server server, int id) throws IOException {
+		this.server = server;
+		this.client = client;
+		this.id = id;
+		out = new ObjectOutputStream(client.getOutputStream());
+		in = new ObjectInputStream(client.getInputStream());
+		barrier = new Barrier(server.numNoticias());
+	}
+
+	public int getIdentifier() {
+		return id;
+	}
+
+	public void criarResposta(Noticia n, ArrayList<Integer> indices) {
+		Resposta r = new Resposta(indices.size(), n.getNomeFicheiro(), indices, n.getTitulo());
+		respostas.add(r);
+	}
+
+	public void enviarRespostas() throws IOException {
+		ArrayList<Resposta> aux = new ArrayList<Resposta>();
+		for (Resposta r : respostas) {
+			aux.add(r);
+		}
+		System.out.println("enviar noticias");
+		out.writeObject(aux);
+		System.out.println("noticias enviadas");
+		respostas.clear();
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				try {
+					Object o = in.readObject();
+					if (this.id == 0) {
+						server.criarTarefa((Pedido) o, this.id);
+						enviarRespostas();
+					} else if (this.id == 1) {
+						server.identificarNoticia(((Pedido) o).getExpression());
+					}
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public Barrier getBarrier() {
+		return barrier;
+	}
+}

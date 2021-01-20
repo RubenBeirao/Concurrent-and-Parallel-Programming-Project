@@ -1,0 +1,28 @@
+package common;
+
+import cliente.Noticia;
+
+public class Tarefa {
+
+	private String expressao;
+	private Noticia noticia;
+	private int handlerID;
+	
+	public Tarefa(String expressao, Noticia noticia, int handlerID) {
+		this.expressao = expressao;
+		this.noticia = noticia;
+		this.handlerID = handlerID;
+	}
+	
+	public Noticia getNoticia() {
+		return noticia;
+	}
+	
+	public String getExpressao() {
+		return expressao;
+	}
+
+	public int getHandlerID() {
+		return handlerID;
+	}
+}

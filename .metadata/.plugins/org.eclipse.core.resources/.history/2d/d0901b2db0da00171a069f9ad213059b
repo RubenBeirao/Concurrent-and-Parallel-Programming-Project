@@ -1,0 +1,39 @@
+package server;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+
+import common.Resposta;
+import common.Tarefa;
+
+
+public class WorkerThread extends Thread{
+
+	private ObjectInputStream in;
+	private Worker worker;
+	private ObjectOutputStream out;
+	private Socket socket;
+
+	public WorkerThread(Worker worker, Socket socket, ObjectInputStream in, ObjectOutputStream out) {
+		this.out = out;
+		this.in = in;
+		this.worker = worker;
+		this.socket = socket;
+	}
+	
+	@Override
+	public void run() {
+		try {
+			Tarefa t = (Tarefa) in.readObject();
+			ArrayList<Integer> indices = t.getNoticia().procurar(t.getExpressao());
+			Resposta resposta = new Resposta(indices.size(), t.getNoticia().getNomeFicheiro(), indices, t.getNoticia().getTitulo());
+			out.writeObject(resposta);
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

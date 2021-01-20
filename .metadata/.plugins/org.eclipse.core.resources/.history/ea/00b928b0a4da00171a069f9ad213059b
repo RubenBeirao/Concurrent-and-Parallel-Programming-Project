@@ -1,0 +1,27 @@
+package server;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+
+import common.Resposta;
+
+public class WorkerHandler extends Thread {
+	private Socket client;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	private Server server;
+	private int id;
+	private ArrayList<Resposta> respostas = new ArrayList<Resposta>();
+	private Barrier barrier;
+
+	public WorkerHandler(Socket client, Server server, ObjectInputStream in, ObjectOutputStream out, int id) throws IOException {
+		this.client = client;
+		this.server = server;
+		this.in = in;
+		this.out = out;
+		barrier = new Barrier(server.numNoticias());
+	}
+}
