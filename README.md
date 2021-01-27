@@ -1,4 +1,4 @@
-# Concurrent-and-Parallel-Programming-Project
+# Distributed-Newspaper-Article-Reader
 
 A project developed in the second year of my university degree in the scope of the Concurrent and Distributed Programming discipline.
 
